@@ -23,8 +23,8 @@ jobs:
       - name: Install and build
         run: yarn install && yarn build
       
-#      - name: Deploy
-#        run: yarn deploy      
+      - name: Deploy react app to github pages
+        uses: tanwanimohit/deploy-react-to-ghpages@v1.0.1  
 
 
 
