@@ -33,6 +33,11 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: List the state of node modules
+        continue-on-error: true
+        run: npm list
+
       - name: Check Github User
         run: |
           git --version
@@ -43,7 +48,10 @@ jobs:
         run: yarn install && yarn build
 
       - name: Deploy react app to github pages
-        uses: tanwanimohit/deploy-react-to-ghpages@v1.0.1  
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+            deploy_key: ${{ secrets.ACTIONS_DEPLOY_ACCESS_TOKEN }}
+            publish_dir: ./build
       
       
 
