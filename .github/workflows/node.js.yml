@@ -19,9 +19,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Restore "node_modules" from cache
+    - name: Cache node_modules
       id: cache
-      uses: martijnhols/actions-cache/restore@v3
+      uses: martijnhols/actions-cache@v3
       with:
         path: node_modules
         key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches') }}
@@ -49,22 +49,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Restore "node_modules" from cache
-      uses: martijnhols/actions-cache/restore@v3
-      with:
-        path: node_modules
-        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches') }}
-        required: true
-
     - name: Build app
       run: yarn build
-
-    # Notice that we do not use a "restore" in this job: the build in our imaginary project can't reuse its own build files so restoring that before building would be a waste of time.
-    - name: Save "build" to cache
-      uses: martijnhols/actions-cache/save@v3
-      with:
-        path: build
-        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
 
   publish:
     needs: [build]
@@ -76,13 +62,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-
-    - name: Restore "build" from cache
-      uses: martijnhols/actions-cache/restore@v3
-      with:
-        path: build
-        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
-        required: true
 
     - name: Check Github User
       run: |
