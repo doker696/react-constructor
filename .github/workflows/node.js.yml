@@ -23,15 +23,11 @@ jobs:
       id: cache
       uses: martijnhols/actions-cache@v3
       with:
-        # Cache the node_modules folder and its contents
         path: node_modules
-        # Genarate a unique key based on the runner OS, an id, and a hash that changes whenever the `yarn.lock` file or any file in the `patches` folder changes.
         key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches') }}
-        # If no exact match is found, look for the most recent cache entry with this key:
         restore-keys: ${{ runner.os }}-node_modules
 
     - name: Install dependencies
-      # Only install dependencies only when no exact match was found in the cache
       if: steps.cache.outputs.cache-hit != 'true'
       run: yarn install
 
@@ -63,6 +59,13 @@ jobs:
     - name: Build app
       run: yarn build
 
+    - name: Save "build" to cache
+    uses: martijnhols/actions-cache/save@v3
+    with:
+      path: build
+      key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
+
+
   publish:
     needs: [build]
     runs-on: ubuntu-latest
@@ -73,6 +76,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Restore "build" from cache
+      uses: martijnhols/actions-cache/restore@v3
+      with:
+        path: build
+        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
+        required: true
 
     - name: Check Github User
       run: |
