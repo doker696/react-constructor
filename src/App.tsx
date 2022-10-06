@@ -1,7 +1,9 @@
 import './App.css'
 
 function App () {
-  return <div>TEST CACHE FIRST TRY</div>
+  return <div>
+    <h2>I AM THE BEST</h2>
+  </div>
 }
 
 export default App
