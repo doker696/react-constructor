@@ -67,7 +67,7 @@ jobs:
         key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
 
   publish:
-    needs: [install]
+    needs: [build]
     runs-on: ubuntu-latest
     
     strategy:
