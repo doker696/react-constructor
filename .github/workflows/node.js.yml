@@ -10,89 +10,89 @@ on:
 
 jobs:
   install:
-      runs-on: ubuntu-latest
-      
-      strategy:
-        matrix:
-          node-version: [15.x]
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [15.x]
 
-      steps:
-      - uses: actions/checkout@v2
+    steps:
+    - uses: actions/checkout@v2
 
-      - name: Restore "node_modules" from cache
-        id: cache
-        uses: martijnhols/actions-cache/restore@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches') }}
-          restore-keys: ${{ runner.os }}-node_modules
+    - name: Restore "node_modules" from cache
+      id: cache
+      uses: martijnhols/actions-cache/restore@v3
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches') }}
+        restore-keys: ${{ runner.os }}-node_modules
 
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: yarn install
+    - name: Install dependencies
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: yarn install
 
-      - name: Save "node_modules" to cache
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: martijnhols/actions-cache/save@v3
-        with:
-          path: node_modules
-          key: ${{ steps.cache.outputs.primary-key }}
+    - name: Save "node_modules" to cache
+      if: steps.cache.outputs.cache-hit != 'true'
+      uses: martijnhols/actions-cache/save@v3
+      with:
+        path: node_modules
+        key: ${{ steps.cache.outputs.primary-key }}
 
-    build:
-      needs: [install]
-      runs-on: ubuntu-latest
+  build:
+    needs: [install]
+    runs-on: ubuntu-latest
 
-      strategy:
-        matrix:
-          node-version: [15.x]
+    strategy:
+      matrix:
+        node-version: [15.x]
 
-      steps:
-      - uses: actions/checkout@v2
+    steps:
+    - uses: actions/checkout@v2
 
-      - name: Restore "node_modules" from cache
-        uses: martijnhols/actions-cache/restore@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches') }}
-          required: true
+    - name: Restore "node_modules" from cache
+      uses: martijnhols/actions-cache/restore@v3
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches') }}
+        required: true
 
-      - name: Build app
-        run: yarn build
+    - name: Build app
+      run: yarn build
 
-      # Notice that we do not use a "restore" in this job: the build in our imaginary project can't reuse its own build files so restoring that before building would be a waste of time.
-      - name: Save "build" to cache
-        uses: martijnhols/actions-cache/save@v3
-        with:
-          path: build
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
+    # Notice that we do not use a "restore" in this job: the build in our imaginary project can't reuse its own build files so restoring that before building would be a waste of time.
+    - name: Save "build" to cache
+      uses: martijnhols/actions-cache/save@v3
+      with:
+        path: build
+        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
 
-    publish:
-      needs: [install]
-      runs-on: ubuntu-latest
-      
-      strategy:
-        matrix:
-          node-version: [15.x]
+  publish:
+    needs: [install]
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [15.x]
 
-      steps:
-      - uses: actions/checkout@v2
+    steps:
+    - uses: actions/checkout@v2
 
-      - name: Restore "build" from cache
-        uses: martijnhols/actions-cache/restore@v3
-        with:
-          path: build
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
-          required: true
+    - name: Restore "build" from cache
+      uses: martijnhols/actions-cache/restore@v3
+      with:
+        path: build
+        key: ${{ runner.os }}-node_modules-${{ hashFiles('yarn.lock', 'patches', 'src', '.babelrc') }}
+        required: true
 
-      - name: Check Github User
-        run: |
-          git --version
-          git config user.name 'doker696'
-          git config user.email 'tokorev.kir@ya.ru'
+    - name: Check Github User
+      run: |
+        git --version
+        git config user.name 'doker696'
+        git config user.email 'tokorev.kir@ya.ru'
 
-      - name: Deploy react app to github pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: build
- 
+    - name: Deploy react app to github pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: build
+
 
