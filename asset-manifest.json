@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/react-constructor/static/css/main.9071bff3.css",
-    "main.js": "/react-constructor/static/js/main.782a0e9c.js",
+    "main.js": "/react-constructor/static/js/main.f68a6814.js",
     "index.html": "/react-constructor/index.html",
     "main.9071bff3.css.map": "/react-constructor/static/css/main.9071bff3.css.map",
-    "main.782a0e9c.js.map": "/react-constructor/static/js/main.782a0e9c.js.map"
+    "main.f68a6814.js.map": "/react-constructor/static/js/main.f68a6814.js.map"
   },
   "entrypoints": [
     "static/css/main.9071bff3.css",
-    "static/js/main.782a0e9c.js"
+    "static/js/main.f68a6814.js"
   ]
 }
