@@ -4,12 +4,14 @@ on:
   push:
     branches:
       - "master"
-  # pull_request:
-  #   branches: 
-  #     - "master"
+  pull_request:
+    branches: 
+      - "master"
+    types: [closed]
 
 jobs:
   install:
+    if: ${{ github.event.pull_request.merged }}
     runs-on: ubuntu-latest
     
     strategy:
